@@ -11,10 +11,8 @@ class UsersController extends Controller
 {
     public function index()                                        
     {                                                       
-        // ユーザ一覧をidの降順で取得
         $users = User::orderBy('id', 'desc')->paginate(10); 
 
-        // ユーザ一覧ビューでそれを表示
         return view('users.index', [                        
             'users' => $users,                              
         ]);                                                 
@@ -25,7 +23,6 @@ class UsersController extends Controller
         // idの値でユーザを検索して取得
         $user = User::findOrFail($id);
         
-        // 関係するモデルの件数をロード
         $user->loadRelationshipCounts();
         
         // ユーザーの投稿一覧を作成日時の降順で取得
@@ -38,18 +35,11 @@ class UsersController extends Controller
         ]);                                                 
     }
     
-    /**
-     * ユーザのフォロー一覧ページを表示するアクション。
-     *
-     * @param  $id  ユーザのid
-     * @return \Illuminate\Http\Response
-     */
     public function followings($id)
     {
         // idの値でユーザを検索して取得
         $user = User::findOrFail($id);
 
-        // 関係するモデルの件数をロード
         $user->loadRelationshipCounts();
 
         // ユーザのフォロー一覧を取得
@@ -62,18 +52,11 @@ class UsersController extends Controller
         ]);
     }
 
-    /**
-     * ユーザのフォロワー一覧ページを表示するアクション。
-     *
-     * @param  $id  ユーザのid
-     * @return \Illuminate\Http\Response
-     */
     public function followers($id)
     {
         // idの値でユーザを検索して取得
         $user = User::findOrFail($id);
 
-        // 関係するモデルの件数をロード
         $user->loadRelationshipCounts();
 
         // ユーザのフォロワー一覧を取得
@@ -85,4 +68,28 @@ class UsersController extends Controller
             'users' => $followers,
         ]);
     }
+    
+    /**
+     * ユーザのお気に入り一覧ページを表示するアクション。
+     *
+     * @param  $id  ユーザのid
+     * @return \Illuminate\Http\Response
+     */    
+    public function favorites($id)
+    {
+        // idの値でユーザを検索して取得
+        $user = User::findOrFail($id);
+
+        $user->loadRelationshipCounts();
+
+        // ユーザのお気に入り一覧を取得
+        $favorites = $user->favorites()->paginate(10);
+//dd($favorites);
+        // フォロー一覧ビューでそれらを表示
+        return view('users.favorites', [
+            'user' => $user,
+            'microposts' => $favorites,
+        ]);
+    }
+    
 }

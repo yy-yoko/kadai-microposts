@@ -23,13 +23,12 @@ class MicropostsController extends Controller
             ];
         }
         
-        // dashboardビューでそれらを表示
         return view('dashboard', $data);
     }
     
     public function store(Request $request)
     {
-        // バリデーション
+
         $request->validate([
             'content' => 'required|max:255',
         ]);
@@ -39,7 +38,7 @@ class MicropostsController extends Controller
             'content' => $request->content,
         ]);
         
-        // 前のURLへリダイレクトさせる
+
         return back();
     }
     
@@ -55,7 +54,7 @@ class MicropostsController extends Controller
                 ->with('success','Delete Successful');
         }
 
-        // 前のURLへリダイレクトさせる
+
         return back()
             ->with('Delete Failed');
     }
