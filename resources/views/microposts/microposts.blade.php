@@ -29,9 +29,40 @@
                                     <button type="submit" class="btn btn-error btn-sm mb-4 normal-case" 
                                         onclick="return confirm('Delete id = {{ $micropost->id }} ?')">Delete</button>
                                 </form>
+                                @if (Auth::user()->is_favorite($micropost->id))
+                                    {{-- お気に入り削除ボタンのフォーム --}}
+                                    <form method="POST" action="{{ route('favorites.unfavorite', $micropost->id) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-error btn-sm normal-case"
+                                            onclick="return confirm('id = {{ $micropost->id }}のお気に入りを外します。よろしいですか？')">Unfavorite</button>
+                                    </form>
+                                @else
+                                    {{-- お気に入りボタンのフォーム  --}}
+                                    <form method="POST" action="{{ route('favorites.favorite',$micropost->id) }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary btn-sm normal-case">Favorite</button>
+                                    </form>
+                                @endif
+                            @else
+                                @if (Auth::id() != $micropost->user_id)
+                                    @if (Auth::user()->is_favorite($micropost->id))
+                                        {{-- お気に入り削除ボタンのフォーム --}}
+                                        <form method="POST" action="{{ route('favorites.unfavorite', $micropost->id) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-error btn-sm normal-case"
+                                                onclick="return confirm('id = {{ $micropost->id }}のお気に入りを外します。よろしいですか？')">Unfavorite</button>
+                                        </form>
+                                    @else
+                                        {{-- お気に入りボタンのフォーム  --}}
+                                        <form method="POST" action="{{ route('favorites.favorite',$micropost->id) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary btn-sm normal-case">Favorite</button>
+                                        </form>
+                                    @endif
+                                @endif
                             @endif
-                            {{-- お気に入り一覧 --}}
-                            @include('favorites.favorite_button')
                         </div>
                     </div>
                 </li>
